@@ -11,10 +11,11 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
 
-    private static final String[] songList
-            = {"Hemisphere", "to soar"};
+    private static final ArrayList<Song> songList = new ArrayList<>();
     private ListView songListView;
 
     @Override
@@ -25,8 +26,11 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         songListView = (ListView) findViewById(R.id.song_list);
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, songList);
-        songListView.setAdapter(arrayAdapter);
+        SongListAdapter songListAdapter = new SongListAdapter(this);
+        songListAdapter.setSongList(songList);
+        songList.add(new Song("Hemisphere", "path"));
+        songList.add(new Song("to soar", "pathtofile"));
+        songListView.setAdapter(songListAdapter);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
