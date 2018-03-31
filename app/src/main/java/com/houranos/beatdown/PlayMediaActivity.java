@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 
 public class PlayMediaActivity extends Activity implements SurfaceHolder.Callback {
     SurfaceView mSurfaceView;
@@ -17,6 +18,9 @@ public class PlayMediaActivity extends Activity implements SurfaceHolder.Callbac
     public void onCreate(Bundle savedInstaceState) {
         super.onCreate(savedInstaceState);
         setContentView(R.layout.activity_media_player);
+        View decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_FULLSCREEN);
         mSurfaceView = (SurfaceView) findViewById(R.id.surface);
         mSurfaceHolder = mSurfaceView.getHolder();
         mSurfaceHolder.addCallback(this);

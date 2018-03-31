@@ -1,14 +1,15 @@
 package com.houranos.beatdown;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -26,10 +27,18 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         songListView = (ListView) findViewById(R.id.song_list);
+        songListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(MainActivity.this, PlayMediaActivity.class);
+                intent.putExtra("FILEPATH", songList.get(i).getPath());
+                startActivity(intent);
+            }
+        });
         SongListAdapter songListAdapter = new SongListAdapter(this);
         songListAdapter.setSongList(songList);
-        songList.add(new Song("Hemisphere", "path"));
-        songList.add(new Song("to soar", "pathtofile"));
+        songList.add(new Song("Hemisphere", "/storage/emulated/0/Movies/BEATdown/Hemisphere.mp4"));
+        songList.add(new Song("to soar", "/storage/emulated/0/Movies/BEATdown/to soar.mp4"));
         songListView.setAdapter(songListAdapter);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
