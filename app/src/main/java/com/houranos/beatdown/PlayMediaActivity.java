@@ -10,9 +10,9 @@ import android.view.SurfaceView;
 import android.view.View;
 
 public class PlayMediaActivity extends Activity implements SurfaceHolder.Callback {
-    SurfaceView mSurfaceView;
-    SurfaceHolder mSurfaceHolder;
-    MediaPlayer mMediaPlayer;
+    SurfaceView surfaceView;
+    SurfaceHolder surfaceHolder;
+    MediaPlayer mediaPlayer;
 
     @Override
     public void onCreate(Bundle savedInstaceState) {
@@ -25,16 +25,16 @@ public class PlayMediaActivity extends Activity implements SurfaceHolder.Callbac
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
-        mSurfaceView = (SurfaceView) findViewById(R.id.surface);
-        mSurfaceHolder = mSurfaceView.getHolder();
-        mSurfaceHolder.addCallback(this);
+        surfaceView = (SurfaceView) findViewById(R.id.surface);
+        surfaceHolder = surfaceView.getHolder();
+        surfaceHolder.addCallback(this);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mMediaPlayer.isPlaying()) {
-            mMediaPlayer.stop();
+        if (mediaPlayer.isPlaying()) {
+            mediaPlayer.stop();
         }
     }
 
@@ -42,9 +42,9 @@ public class PlayMediaActivity extends Activity implements SurfaceHolder.Callbac
     public void surfaceCreated(SurfaceHolder holder) {
         try {
             Intent intent = getIntent();
-            mMediaPlayer = MediaPlayer.create(this, Uri.parse(intent.getStringExtra("FILEPATH")));
-            mMediaPlayer.setDisplay(holder);
-            mMediaPlayer.start();
+            mediaPlayer = MediaPlayer.create(this, Uri.parse(intent.getStringExtra("FILEPATH")));
+            mediaPlayer.setDisplay(holder);
+            mediaPlayer.start();
         } catch (Exception e) {
             System.out.println("Opening file failed");
         }
