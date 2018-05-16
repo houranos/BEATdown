@@ -7,11 +7,14 @@ import android.media.PlaybackParams;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.constraint.Group;
 import android.support.design.widget.FloatingActionButton;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.SeekBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 public class PlayMediaActivity extends Activity implements SurfaceHolder.Callback {
     SurfaceView surfaceView;
@@ -20,9 +23,15 @@ public class PlayMediaActivity extends Activity implements SurfaceHolder.Callbac
     SeekBar seekBar;
     SeekBar playbackRate;
     Handler handler;
-    FloatingActionButton pauseButton;
-    PlaybackParams params;
-
+    FloatingActionButton hideFab;
+    FloatingActionButton revealFab;
+    FloatingActionButton loopFab;
+    FloatingActionButton closeFab;
+    int loopFlag = 0;
+    int loopStartPos;
+    int loopEndPos;
+    TextView speedText;
+    Group groupView;
 
     @Override
     public void onCreate(Bundle savedInstaceState) {
@@ -42,7 +51,58 @@ public class PlayMediaActivity extends Activity implements SurfaceHolder.Callbac
         playbackRate = (SeekBar) findViewById(R.id.playspeed);
         seekBar.setClickable(false);
         handler = new Handler();
-//        pauseButton = (Button) findViewById(R.id.)
+        groupView = (Group) findViewById(R.id.menu);
+        hideFab = (FloatingActionButton) findViewById(R.id.hideButton);
+        hideFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                groupView.setVisibility(View.GONE);
+                revealFab.setVisibility(View.VISIBLE);
+            }
+        });
+        revealFab = (FloatingActionButton) findViewById(R.id.revealButton);
+        revealFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                groupView.setVisibility(View.VISIBLE);
+                revealFab.setVisibility(View.GONE);
+            }
+        });
+        loopFab = (FloatingActionButton) findViewById(R.id.loopButton);
+        loopFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (loopFlag) {
+                    case 0:
+                        loopStartPos = mediaPlayer.getCurrentPosition();
+                        Toast.makeText(PlayMediaActivity.this, "Loop Start", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 1:
+                        loopEndPos = mediaPlayer.getCurrentPosition();
+                        Toast.makeText(PlayMediaActivity.this, "Loop End", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 2:
+                        loopStartPos = 0;
+                        loopEndPos = mediaPlayer.getDuration();
+                        Toast.makeText(PlayMediaActivity.this, "Loop Clear", Toast.LENGTH_SHORT).show();
+                        break;
+                    default:
+                        break;
+                }
+                loopFlag++;
+                loopFlag %= 3;
+            }
+        });
+        closeFab = (FloatingActionButton) findViewById(R.id.closeButton);
+        closeFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mediaPlayer.stop();
+                finish();
+            }
+        });
+        speedText = (TextView) findViewById(R.id.speedText);
+        speedText.setText("100");
     }
 
     @Override
@@ -54,6 +114,12 @@ public class PlayMediaActivity extends Activity implements SurfaceHolder.Callbac
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        mediaPlayer.pause();
+    }
+
+    @Override
     public void surfaceCreated(SurfaceHolder holder) {
         Intent intent = getIntent();
         try {
@@ -62,15 +128,21 @@ public class PlayMediaActivity extends Activity implements SurfaceHolder.Callbac
         } catch (Exception e) {
             System.out.println("Opening file failed");
         }
+        loopStartPos = 0;
+        loopEndPos = mediaPlayer.getDuration();
 
         mediaPlayer.setDisplay(holder);
         mediaPlayer.start();
-        seekBar.setMax(mediaPlayer.getDuration() / 1000);
+        seekBar.setMax(mediaPlayer.getDuration());
         final Runnable runnable = new Runnable() {
             @Override
             public void run() {
                 if (mediaPlayer != null) {
-                    int currentPosition = mediaPlayer.getCurrentPosition() / 1000; // In milliseconds
+                    int currentPosition = mediaPlayer.getCurrentPosition();
+                    if (currentPosition > loopEndPos) {
+                        currentPosition = loopStartPos;
+                        mediaPlayer.seekTo(currentPosition);
+                    }
                     seekBar.setProgress(currentPosition);
                 }
                 handler.postDelayed(this, 1000);
@@ -81,7 +153,7 @@ public class PlayMediaActivity extends Activity implements SurfaceHolder.Callbac
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 if (mediaPlayer != null && b) {
-                    mediaPlayer.seekTo(i * 1000);
+                    mediaPlayer.seekTo(i);
                 }
             }
 
@@ -98,8 +170,9 @@ public class PlayMediaActivity extends Activity implements SurfaceHolder.Callbac
         playbackRate.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                params = mediaPlayer.getPlaybackParams();
-                params.setSpeed(progress / 100f);
+                speedText.setText(String.valueOf(progress + 10));
+                PlaybackParams params = mediaPlayer.getPlaybackParams();
+                params.setSpeed((progress + 10) / 100f);
                 mediaPlayer.setPlaybackParams(params);
             }
 

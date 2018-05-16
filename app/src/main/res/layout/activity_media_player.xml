@@ -20,7 +20,7 @@
         android:layout_marginEnd="150dp"
         android:layout_marginStart="150dp"
         android:layout_marginTop="32dp"
-        android:max="200"
+        android:max="190"
         android:progress="100"
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
@@ -31,8 +31,8 @@
         android:id="@+id/seekbar"
         android:layout_width="0dp"
         android:layout_height="48dp"
-        android:layout_marginEnd="100dp"
-        android:layout_marginStart="100dp"
+        android:layout_marginEnd="150dp"
+        android:layout_marginStart="150dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/playspeed" />
@@ -41,29 +41,59 @@
         android:id="@+id/closeButton"
         android:layout_width="32dp"
         android:layout_height="32dp"
-        android:layout_marginBottom="3dp"
-        android:layout_marginEnd="100dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="3dp"
-        app:layout_constraintBottom_toTopOf="@+id/surface"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/playspeed"
-        app:layout_constraintTop_toTopOf="@id/playspeed"
-        app:layout_constraintVertical_bias="0.0" />
+        android:layout_marginEnd="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/seekbar"
+        app:layout_constraintEnd_toStartOf="@+id/seekbar"
+        app:layout_constraintTop_toTopOf="@+id/seekbar" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/hideButton"
         android:layout_width="32dp"
         android:layout_height="32dp"
-        android:layout_marginBottom="3dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginStart="100dp"
-        android:layout_marginTop="3dp"
-        app:layout_constraintBottom_toTopOf="@+id/surface"
+        app:layout_constraintBottom_toTopOf="@+id/seekbar"
         app:layout_constraintEnd_toStartOf="@+id/playspeed"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintTop_toTopOf="@+id/playspeed" />
+
+    <android.support.constraint.Group
+        android:id="@+id/menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="closeButton,hideButton,playspeed,seekbar,loopButton,speedText" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/revealButton"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="40dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/playspeed"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toTopOf="@+id/surface"
+        app:srcCompat="@color/colorAccent" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/loopButton"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/seekbar"
+        app:layout_constraintStart_toEndOf="@+id/seekbar"
+        app:layout_constraintTop_toTopOf="@+id/seekbar"
+        app:srcCompat="@color/colorAccent" />
+
+    <TextView
+        android:id="@+id/speedText"
+        android:layout_width="48dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:ems="0"
+        android:textAlignment="center"
+        android:textColor="@android:color/white"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/seekbar"
+        app:layout_constraintStart_toEndOf="@+id/playspeed"
+        app:layout_constraintTop_toTopOf="@+id/playspeed" />
 </android.support.constraint.ConstraintLayout>
